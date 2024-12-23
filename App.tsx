@@ -7,7 +7,9 @@
 
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import FingerprintAuth from './FingerprintAuth';
+import Registration from './components/Registration';
+import Attendance from './components/Attendance';
+import Landing from './components/Landing';
 import {
   SafeAreaView,
   ScrollView,
@@ -17,6 +19,9 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStaticNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import {
   Colors,
@@ -29,6 +34,8 @@ import {
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
+
+// const Stack = createStackNavigator();
 
 function Section({children, title}: SectionProps): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -56,36 +63,32 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
+const RootStack = createNativeStackNavigator({
+  initialRouteName: 'Landing',
+  screens: {
+    Landing: Landing,
+    Register: Registration,
+    Attendance: Attendance
+  },
+});
+
+const Navigation = createStaticNavigation(RootStack);
+
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
+//   const Stack = createStackNavigator();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Registration">
-            <FingerprintAuth />
-          </Section>
-          <Section title="Login">
-            <FingerprintAuth />
-          </Section>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+//     <SafeAreaView style={backgroundStyle}>
+//       <StatusBar
+//         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+//         backgroundColor={backgroundStyle.backgroundColor}
+//       />
+      <Navigation />
+//     </SafeAreaView>
   );
 }
 
